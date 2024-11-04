@@ -1,12 +1,21 @@
-from typing import List, Optional
+from typing import List
 
 from .note import NoteCreate, NoteUpdate, Note
 from .storage import Storage
 
 
 class Notebook:
-    def __init__(self, storage: Storage, notes: Optional[List[Note]] = None):
-        pass
+    def __init__(self, storage: Storage):
+        self.__storage = storage
+        self.__notes = self.__storage.load()
+
+    @property
+    def file_path(self):
+        return self.__storage.location
+
+    @property
+    def notes(self):
+        return self.__notes
 
     def add_note(self, note: NoteCreate) -> None:
         pass
@@ -22,3 +31,9 @@ class Notebook:
 
     def get_note(self, note_id: int) -> Note:
         pass
+
+    def __iter__(self):
+        pass
+
+    # def __str__(self):
+    #     pass
