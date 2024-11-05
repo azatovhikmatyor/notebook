@@ -1,3 +1,3 @@
-from .note import Note, NoteCreate, NoteUpdate
+from .note import Note, NoteUpdate
 from .notebook import Notebook
 from .storage import Storage, JsonFile
