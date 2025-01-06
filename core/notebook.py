@@ -1,18 +1,15 @@
 from typing import List
 from reprlib import repr
 
-from .note import NoteUpdate, Note
+from .note import Note
 from .storage import Storage
+from .exc import NoteNotFound
 
 
 class Notebook:
     def __init__(self, storage: Storage):
         self.__storage = storage
         self.__notes = self.__storage.load()
-
-    @property
-    def file_path(self):
-        return self.__storage.location
 
     @property
     def notes(self):
@@ -30,10 +27,10 @@ class Notebook:
         self.__storage.save(self.__notes)
 
 
-    def update_note(self, note: NoteUpdate) -> None:
+    def update_note(self, note: Note) -> None:
         for n in self:
             if n.id == note.id:
-                n.update(note) 
+                n.text = note.text
         self.__storage.save(self.__notes)
         # TODO: Raise error if note not found
 
@@ -51,10 +48,11 @@ class Notebook:
     def get_note(self, note_id: int) -> Note:
         return self[note_id]
     
-    def __getitem__(self, id: int):
+    def __getitem__(self, note_id: int):
         for note in self.__notes:
-            if note.id == id:
+            if note.id == note_id:
                 return note
+        raise NoteNotFound(msg=f'Note with {note_id=} note found.')
 
     def __iter__(self):
         notes = self.__notes.copy()
@@ -66,3 +64,4 @@ class Notebook:
     
     def __len__(self):
         return len(self.__notes)
+    
